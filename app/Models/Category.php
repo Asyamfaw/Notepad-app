@@ -9,13 +9,14 @@ class Category extends Model
 {
     /** @use HasFactory<\Database\Factories\CategoryFactory> */
     use HasFactory;
- protected $fillable = ['user_id', 'name', 'color'];
+
+    protected $fillable = ['user_id', 'name', 'color'];
 
     public function user()
     {
         return $this->belongsTo(User::class);
     }
-e
+
     public function notes()
     {
         return $this->hasMany(Note::class);
