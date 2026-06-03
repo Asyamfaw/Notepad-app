@@ -1,8 +1,8 @@
-<!-- Pembagian TUgas -->
-1. Fawwaz = Routing dan dummy styling
-2. Baim = Frontend
-3. Fauzan = Debugging
-4. Ahsan = Testing UI/UX
+<!-- Pembagian Tugas -->
+1. Fawwaz = Backend developer, UI/UX Desain, Debugger.
+2. Baim = Frontend Developer
+3. Fauzan = Frontend Developer
+4. Ahsan = Frontend Developer
 
 <!-- Tutorial Bikin Branch -->
 1. git checkout -b nama-branch-baru
@@ -25,3 +25,9 @@ ini beberapa command yang lain : - refactor: Mengubah kode tanpa menambah fitur 
                                  - feat: Menambahkan fitur baru (contoh: feat: add login endpoint).
                                  - fix: Memperbaiki bug (contoh: fix: resolve null pointer in payment gateway).
                                  - chore: Pemeliharaan rutin (contoh: pembaruan dependency)
+
+<!-- Jangan Dilakukan -->
+1. Jangan makan minum saat puasa Ramdahan
+2. Jangan Durhaka kepada orang tua.
+3. Jangan mangspam push klo belum commit.
+4. Jangan Tidur dan main Game saat penjelasan Projek. 
