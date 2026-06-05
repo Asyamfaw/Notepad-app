@@ -65,11 +65,14 @@ class Note extends Model
         return $query->orderByDesc('is_pinned')->latest();
     }
 
-    public function scopeSearch($query, string $keyword)
-    {
-        return $query->when($keyword, fn($q) =>
-            $q->where('title', 'like', "%{$keyword}%")
-              ->orWhere('content', 'like', "%{$keyword}%")
-        );
-    }
+public function scopeSearch($query, string $keyword)
+{
+    return $query->when($keyword, fn($q) =>
+        // Wrapped dalam closure agar ter-group dengan AND
+        $q->where(fn($sub) =>
+            $sub->where('title', 'like', "%{$keyword}%")
+                ->orWhere('content', 'like', "%{$keyword}%")
+        )
+    );
+}
 }

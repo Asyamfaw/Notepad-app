@@ -45,11 +45,11 @@
             <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            <input type="text" wire:model.debounce.300ms="search"
+            <input type="text" wire:model.live.debounce.300ms="search"
                    placeholder="Search in trash..." class="search-input">
         </div>
 
-        <select wire:model="category" class="filter-select">
+        <select wire:model.live="category" class="filter-select">
             <option value="">All categories</option>
             @foreach ($categories as $cat)
                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -57,7 +57,7 @@
         </select>
 
         @if ($notes->isNotEmpty())
-            <button wire:click="$set('showConfirmEmpty', true)" class="btn-empty-trash">
+            <button onclick="confirmEmptyTrash()" class="btn-empty-trash">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="3 6 5 6 21 6"/>
                     <path d="M19 6l-1 14H6L5 6"/>
@@ -158,10 +158,9 @@
                             <span wire:loading wire:target="restore({{ $note->id }})">Restoring...</span>
                         </button>
 
-                        <button wire:click="forceDelete({{ $note->id }})"
+                        <button onclick="confirmForceDelete({{ $note->id }})"
                                 wire:loading.attr="disabled"
                                 wire:target="forceDelete({{ $note->id }})"
-                                wire:confirm="Delete permanently? This cannot be undone."
                                 class="btn-delete">
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <polyline points="3 6 5 6 21 6"/>
@@ -175,33 +174,79 @@
             @endforeach
         </div>
     @endif
-
-    {{-- ── Modal Konfirmasi Empty Trash ── --}}
-    @if ($showConfirmEmpty)
-        <div class="modal-overlay" wire:click.self="$set('showConfirmEmpty', false)">
-            <div class="modal" x-data x-trap="true">
-                <div class="modal-icon">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
-                        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-                    </svg>
-                </div>
-                <h2 class="modal-title">Empty Trash?</h2>
-                <p class="modal-desc">
-                    All <strong>{{ $notes->count() }} notes</strong> will be permanently deleted.
-                    This action <strong>cannot be undone</strong>.
-                </p>
-                <div class="modal-actions">
-                    <button wire:click="$set('showConfirmEmpty', false)" class="btn-cancel">Cancel</button>
-                    <button wire:click="emptyTrash" wire:loading.attr="disabled" class="btn-confirm-delete">
-                        <span wire:loading.remove wire:target="emptyTrash">Yes, Delete All</span>
-                        <span wire:loading wire:target="emptyTrash">Deleting...</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    @endif
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmForceDelete(noteId) {
+        Swal.fire({
+            title: 'Delete Permanently?',
+            text: "This action cannot be undone! The note will be gone forever.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#E24B4A',
+            cancelButtonColor: '#3a5568',
+            confirmButtonText: 'Yes, delete forever!',
+            cancelButtonText: 'Cancel',
+            background: '#131b24',
+            color: '#e8f4f8',
+            customClass: {
+                popup: 'swal-dark',
+                title: 'swal-title',
+                htmlContainer: 'swal-text'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.call('forceDelete', noteId);
+                Swal.fire({
+                    title: 'Deleted!',
+                    text: 'The note has been permanently deleted.',
+                    icon: 'success',
+                    confirmButtonColor: '#23A9BD',
+                    background: '#131b24',
+                    color: '#e8f4f8',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }
+
+    function confirmEmptyTrash() {
+        Swal.fire({
+            title: 'Empty Trash?',
+            text: "All notes in trash will be permanently deleted. This cannot be undone.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#E24B4A',
+            cancelButtonColor: '#3a5568',
+            confirmButtonText: 'Yes, delete all!',
+            cancelButtonText: 'Cancel',
+            background: '#131b24',
+            color: '#e8f4f8',
+            customClass: {
+                popup: 'swal-dark',
+                title: 'swal-title',
+                htmlContainer: 'swal-text'
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                @this.call('emptyTrash');
+                Swal.fire({
+                    title: 'Trash Emptied!',
+                    text: 'All notes have been permanently deleted.',
+                    icon: 'success',
+                    confirmButtonColor: '#23A9BD',
+                    background: '#131b24',
+                    color: '#e8f4f8',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            }
+        });
+    }
+</script>
 
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700&display=swap');
@@ -415,58 +460,19 @@
 .btn-delete:hover { background: rgba(226,75,74,0.1); border-color: rgba(226,75,74,0.4); }
 .btn-restore:disabled, .btn-delete:disabled { opacity: 0.45; cursor: not-allowed; }
 
-/* Modal */
-.modal-overlay {
-    position: fixed; inset: 0; background: rgba(5,10,20,0.8);
-    display: flex; align-items: center; justify-content: center; z-index: 50;
-    backdrop-filter: blur(6px);
-    animation: fadeIn 0.15s ease;
+.swal-dark {
+    background: #131b24 !important;
+    border: 1px solid #1e2d3d !important;
+    border-radius: 14px !important;
 }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.swal-title { color: #e8f4f8 !important; }
+.swal-text { color: #7a9bb0 !important; }
 
-.modal {
-    background: #131b24; border: 1px solid #1e2d3d;
-    border-radius: 18px; padding: 36px 32px;
-    max-width: 400px; width: 90%; display: flex; flex-direction: column;
-    align-items: center; gap: 14px; text-align: center;
-    box-shadow: 0 32px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(226,75,74,0.1);
-    animation: slideUp 0.2s ease;
-}
-@keyframes slideUp { from { transform: translateY(12px); opacity: 0; } to { transform: none; opacity: 1; } }
-
-.modal-icon {
-    width: 58px; height: 58px; border-radius: 15px;
-    background: rgba(226,75,74,0.1); border: 1px solid rgba(226,75,74,0.25);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--danger); margin-bottom: 4px;
-}
-.modal-title { font-size: 19px; font-weight: 600; color: var(--text-primary); margin: 0; }
-.modal-desc { font-size: 13.5px; color: var(--text-secondary); line-height: 1.7; margin: 0; }
-.modal-desc strong { color: var(--text-primary); }
-.modal-actions { display: flex; gap: 10px; margin-top: 8px; width: 100%; }
-.btn-cancel {
-    flex: 1; height: 40px; background: rgba(255,255,255,0.04);
-    border: 1px solid #1e2d3d; border-radius: 9px;
-    color: var(--text-secondary); font-size: 13.5px; cursor: pointer;
-    transition: all 0.18s; font-family: inherit;
-}
-.btn-cancel:hover { border-color: #2e4a60; color: var(--text-primary); }
-.btn-confirm-delete {
-    flex: 1; height: 40px; background: var(--danger);
-    border: 1px solid var(--danger); border-radius: 9px;
-    color: #fff; font-size: 13.5px; font-weight: 600;
-    cursor: pointer; transition: all 0.18s; font-family: inherit;
-}
-.btn-confirm-delete:hover { background: #c83d3c; border-color: #c83d3c; }
-.btn-confirm-delete:disabled { opacity: 0.6; cursor: not-allowed; }
-
-/* Responsive */
 @media (max-width: 640px) {
     .notes-grid { grid-template-columns: 1fr; }
     .search-bar { flex-direction: column; }
     .btn-empty-trash { width: 100%; justify-content: center; }
     .search-wrap, .filter-select { width: 100%; min-width: unset; }
-    .modal { padding: 28px 20px; }
 }
 @media (min-width: 641px) and (max-width: 1024px) {
     .notes-grid { grid-template-columns: repeat(2, 1fr); }

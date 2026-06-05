@@ -10,8 +10,8 @@ use Illuminate\Support\Facades\Auth;
 class NoteList extends Component
 {
     public string $search = '';
-    public string $category = '';
-    public string $priority = '';
+    public  $category = '';
+    public  $priority = '';
 
     protected $queryString = ['search', 'category', 'priority'];
 

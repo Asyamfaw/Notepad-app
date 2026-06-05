@@ -15,33 +15,31 @@
     </div>
 
     {{-- ── Filter Bar ── --}}
-    <div class="filter-bar">
-        <div class="search-wrap">
-            <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            <input
-                type="text"
-                wire:model.debounce.300ms="search"
-                placeholder="Search notes..."
-                class="search-input"
-            >
-        </div>
-
-        <select wire:model="category" class="filter-select">
-            <option value="">All categories</option>
-            @foreach($categories as $cat)
-                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-            @endforeach
-        </select>
-
-        <select wire:model="priority" class="filter-select">
-            <option value="">All priorities</option>
-            <option value="high">🔴 High</option>
-            <option value="medium">🟡 Medium</option>
-            <option value="low">🟢 Low</option>
-        </select>
+<div class="filter-bar">
+    <div class="search-wrap">
+        <svg class="search-icon" ...>...</svg>
+        <input
+            type="text"
+            wire:model.live.debounce.300ms="search"
+            placeholder="Search notes..."
+            class="search-input"
+        >
     </div>
+
+    <select wire:model.live="category" class="filter-select">
+        <option value="">All categories</option>
+        @foreach($categories as $cat)
+            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+        @endforeach
+    </select>
+
+    <select wire:model.live="priority" class="filter-select">
+        <option value="">All priorities</option>
+        <option value="high">🔴 High</option>
+        <option value="medium">🟡 Medium</option>
+        <option value="low">🟢 Low</option>
+    </select>
+</div>
 
     {{-- ── Quick Stats ── --}}
     <div class="stats-row">
