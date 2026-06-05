@@ -1,87 +1,184 @@
-<div class="auth-form">
-    <h1 class="auth-title">Masuk</h1>
-    <p class="auth-sub">Selamat datang kembali 👋</p>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+<div class="min-h-screen bg-[#050505] flex items-center justify-center px-4 relative overflow-hidden">
 
-    <form wire:submit.prevent="login">
-        <div class="form-group">
-            <label class="form-label">Email</label>
-            <input
-                type="email"
-                wire:model.defer="email"
-                class="form-input {{ $errors->has('email') ? 'input-error' : '' }}"
-                placeholder="email@example.com"
-                autofocus
+    <!-- Background Glow -->
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.06),transparent_60%)]"></div>
+
+    <!-- Card -->
+    <div
+        class="relative w-full max-w-md rounded-3xl border border-white/10
+               bg-white/[0.03] backdrop-blur-2xl
+               shadow-[0_20px_80px_rgba(0,0,0,0.6)]
+               p-10"
+    >
+
+        <!-- Logo -->
+        <div class="flex justify-center">
+            <div class="w-16 h-16 rounded-2xl bg-white/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     class="w-8 h-8 text-white"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M8 6h8M8 12h8M8 18h4" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Header -->
+        <div class="text-center mt-6">
+            <h1 class="text-5xl font-bold text-white">
+                Noteku
+            </h1>
+
+            <p class="text-zinc-500 mt-2">
+                Atmospheric Obsidian Workspace
+            </p>
+        </div>
+
+        <!-- Form -->
+        <form wire:submit.prevent="login" class="mt-10 space-y-5">
+
+            <!-- Email -->
+            <div>
+                <label class="text-sm text-zinc-300 mb-2 block">
+                    Email Address
+                </label>
+
+                <div class="relative">
+                    <input
+                        type="email"
+                        wire:model.defer="email"
+                        placeholder="name@company.com"
+                        class="w-full h-14 rounded-xl
+                               bg-black/50
+                               border border-white/5
+                               text-white
+                               placeholder:text-zinc-600
+                               px-4
+                               focus:outline-none
+                               focus:border-white/20"
+                    >
+                </div>
+
+                @error('email')
+                    <span class="text-red-400 text-xs mt-1 block">
+                        {{ $message }}
+                    </span>
+                @enderror
+            </div>
+
+            <!-- Password -->
+            <div>
+                <div class="flex justify-between mb-2">
+                    <label class="text-sm text-zinc-300">
+                        Password
+                    </label>
+
+                    <a href="#"
+                       class="text-sm text-zinc-500 hover:text-zinc-300">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <input
+                    type="password"
+                    wire:model.defer="password"
+                    placeholder="••••••••"
+                    class="w-full h-14 rounded-xl
+                           bg-black/50
+                           border border-white/5
+                           text-white
+                           placeholder:text-zinc-600
+                           px-4
+                           focus:outline-none
+                           focus:border-white/20"
+                >
+
+                @error('password')
+                    <span class="text-red-400 text-xs mt-1 block">
+                        {{ $message }}
+                    </span>
+                @enderror
+            </div>
+
+            <!-- Remember -->
+            <div class="flex items-center gap-3">
+                <input
+                    type="checkbox"
+                    id="remember"
+                    wire:model.defer="remember"
+                    class="rounded border-zinc-700 bg-black"
+                >
+
+                <label
+                    for="remember"
+                    class="text-zinc-400 text-sm"
+                >
+                    Remember for 30 days
+                </label>
+            </div>
+
+            <!-- Button -->
+            <button
+                type="submit"
+                class="w-full h-14 rounded-xl
+                       bg-white
+                       text-black
+                       font-semibold
+                       text-lg
+                       hover:bg-zinc-200
+                       transition"
             >
-            @error('email')
-                <span class="form-error">{{ $message }}</span>
-            @enderror
+                <span wire:loading.remove>
+                    Sign In
+                </span>
+
+                <span wire:loading>
+                    Loading...
+                </span>
+            </button>
+
+        </form>
+
+        <!-- Divider -->
+        <div class="flex items-center gap-4 my-8">
+            <div class="flex-1 h-px bg-white/5"></div>
+
+            <span class="text-xs tracking-[0.3em] text-zinc-600">
+                OR CONTINUE WITH
+            </span>
+
+            <div class="flex-1 h-px bg-white/5"></div>
         </div>
 
-        <div class="form-group">
-            <label class="form-label">Password</label>
-            <input
-                type="password"
-                wire:model.defer="password"
-                class="form-input {{ $errors->has('password') ? 'input-error' : '' }}"
-                placeholder="••••••••"
-            >
-            @error('password')
-                <span class="form-error">{{ $message }}</span>
-            @enderror
-        </div>
-
-        <div class="form-check">
-            <input type="checkbox" wire:model.defer="remember" id="remember">
-            <label for="remember">Ingat saya</label>
-        </div>
-
-        <button type="submit" class="btn-primary" wire:loading.attr="disabled">
-            <span wire:loading.remove>Masuk</span>
-            <span wire:loading>Memproses...</span>
+        <!-- Google -->
+        <button
+            class="w-full h-14 rounded-xl
+                   bg-white/[0.03]
+                   border border-white/5
+                   text-white
+                   hover:bg-white/[0.05]
+                   transition"
+        >
+            Google
         </button>
-    </form>
 
-    <p class="auth-footer">
-        Belum punya akun?
-        <a href="{{ route('register') }}">Daftar sekarang</a>
-    </p>
+        <!-- Register -->
+        <p class="text-center text-zinc-500 mt-8">
+            Don't have an account?
+
+            <a
+                href="{{ route('register') }}"
+                class="text-white font-medium hover:underline"
+            >
+                Create Account
+            </a>
+        </p>
+
+    </div>
+
 </div>
-
-<style>
-.auth-form { display: flex; flex-direction: column; gap: 4px; }
-.auth-title { font-size: 22px; font-weight: 600; color: #e8e6e0; margin-bottom: 4px; }
-.auth-sub { font-size: 13px; color: #666; margin-bottom: 24px; }
-
-.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
-.form-label { font-size: 12.5px; font-weight: 500; color: #999; }
-.form-input {
-    height: 40px; padding: 0 12px;
-    background: #0a0a0a; border: 1px solid #2a2a2a;
-    border-radius: 8px; color: #e8e6e0;
-    font-size: 14px; outline: none;
-    transition: border-color 0.15s; font-family: inherit;
-}
-.form-input:focus { border-color: #378ADD; }
-.form-input::placeholder { color: #444; }
-.input-error { border-color: #E24B4A !important; }
-.form-error { font-size: 12px; color: #E24B4A; }
-
-.form-check { display: flex; align-items: center; gap: 8px; margin-bottom: 20px; }
-.form-check input { accent-color: #378ADD; cursor: pointer; }
-.form-check label { font-size: 13px; color: #888; cursor: pointer; }
-
-.btn-primary {
-    width: 100%; height: 42px;
-    background: #378ADD; border: none;
-    border-radius: 10px; color: #fff;
-    font-size: 14px; font-weight: 500;
-    cursor: pointer; transition: background 0.15s;
-    font-family: inherit;
-}
-.btn-primary:hover { background: #2e72c9; }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-
-.auth-footer { font-size: 13px; color: #555; text-align: center; margin-top: 20px; }
-.auth-footer a { color: #378ADD; text-decoration: none; }
-.auth-footer a:hover { text-decoration: underline; }
-</style>
