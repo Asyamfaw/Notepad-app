@@ -1,76 +1,75 @@
 <div class="form-page">
     <div class="form-header">
         <a href="{{ route('dashboard') }}" class="btn-back">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M19 12H5M12 5l-7 7 7 7"/>
             </svg>
-            Kembali
+            Back to Dashboard
         </a>
-        <h1 class="form-title">{{ $note ? 'Edit Catatan' : 'Catatan Baru' }}</h1>
+        <h1 class="form-title">{{ $note ? 'Edit Note' : 'Create New Note' }}</h1>
     </div>
 
     <form wire:submit.prevent="save" class="note-form">
 
         {{-- Title --}}
         <div class="form-group">
-            <label class="form-label">Judul <span class="required">*</span></label>
+            <label class="form-label">Title <span class="required">*</span></label>
             <input type="text" wire:model.defer="title"
                    class="form-input {{ $errors->has('title') ? 'input-error' : '' }}"
-                   placeholder="Judul catatan...">
+                   placeholder="Write your note title...">
             @error('title') <span class="form-error">{{ $message }}</span> @enderror
         </div>
 
         {{-- Content --}}
         <div class="form-group">
-            <label class="form-label">Isi Catatan <span class="required">*</span></label>
-            <textarea wire:model.defer="content" rows="8"
+            <label class="form-label">Content <span class="required">*</span></label>
+            <textarea wire:model.defer="content" rows="10"
                       class="form-input form-textarea {{ $errors->has('content') ? 'input-error' : '' }}"
-                      placeholder="Tulis catatanmu di sini..."></textarea>
+                      placeholder="Write your thoughts here..."></textarea>
             @error('content') <span class="form-error">{{ $message }}</span> @enderror
         </div>
 
         {{-- Row: Category & Priority --}}
         <div class="form-row">
             <div class="form-group">
-                <label class="form-label">Kategori</label>
+                <label class="form-label">Category</label>
                 <select wire:model.defer="category_id" class="form-input">
-                    <option value="">— Tanpa Kategori —</option>
+                    <option value="">— No Category —</option>
                     @foreach($categories as $cat)
                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="form-group">
-                <label class="form-label">Prioritas</label>
+                <label class="form-label">Priority</label>
                 <select wire:model.defer="priority" class="form-input">
-                    <option value="high">🔴 Tinggi</option>
-                    <option value="medium">🟡 Sedang</option>
-                    <option value="low">🟢 Rendah</option>
+                    <option value="high">🔴 High</option>
+                    <option value="medium">🟡 Medium</option>
+                    <option value="low">🟢 Low</option>
                 </select>
             </div>
         </div>
 
-        {{-- Row: Deadline & Color --}}
+        {{-- Row: Deadline & Color Label --}}
         <div class="form-row">
             <div class="form-group">
                 <label class="form-label">Deadline</label>
                 <input type="date" wire:model.defer="deadline" class="form-input">
             </div>
             <div class="form-group">
-                <label class="form-label">Warna Label</label>
-                <div style="display:flex;align-items:center;gap:8px;">
-                    <input type="color" wire:model.defer="color_label"
-                           style="height:40px;width:48px;border:1px solid #2a2a2a;border-radius:8px;background:#111;cursor:pointer;padding:2px;">
-                    <input type="text" wire:model.defer="color_label" class="form-input"
-                           placeholder="#378ADD" style="flex:1;">
+                <label class="form-label">Color Label</label>
+                <div class="color-group">
+                    <input type="color" wire:model.defer="color_label" class="color-input">
+                    <input type="text" wire:model.defer="color_label" class="form-input color-text"
+                           placeholder="#23A9BD">
                 </div>
             </div>
         </div>
 
-        {{-- Tags --}}
+        {{-- Tags Selection --}}
         @if($tags->count())
         <div class="form-group">
-            <label class="form-label">Tag</label>
+            <label class="form-label">Tags (multi-select)</label>
             <div class="tags-wrap">
                 @foreach($tags as $tag)
                     <label class="tag-check {{ in_array($tag->id, $selected_tags) ? 'tag-check--active' : '' }}">
@@ -82,92 +81,102 @@
         </div>
         @endif
 
-        {{-- Toggles --}}
+        {{-- Toggle Options --}}
         <div class="toggles-row">
             <label class="toggle-label">
                 <input type="checkbox" wire:model.defer="is_pinned">
-                <span>📌 Pin catatan ini</span>
+                <span>📌 Pin this note</span>
             </label>
             <label class="toggle-label">
                 <input type="checkbox" wire:model.defer="is_archived">
-                <span>📦 Langsung arsipkan</span>
+                <span>📦 Archive immediately</span>
             </label>
         </div>
 
-        {{-- Actions --}}
+        {{-- Form Actions --}}
         <div class="form-actions">
             <button type="button" wire:click="saveDraft" class="btn-secondary" wire:loading.attr="disabled">
-                Simpan Draft
+                Save as Draft
             </button>
             <button type="submit" class="btn-primary" wire:loading.attr="disabled">
-                <span wire:loading.remove wire:target="save">{{ $note ? 'Simpan Perubahan' : 'Publikasikan' }}</span>
-                <span wire:loading wire:target="save">Menyimpan...</span>
+                <span wire:loading.remove wire:target="save">{{ $note ? 'Save Changes' : 'Publish Note' }}</span>
+                <span wire:loading wire:target="save">Saving...</span>
             </button>
         </div>
     </form>
 </div>
 
 <style>
-.form-page { max-width: 720px; margin: 0 auto; font-family: 'Inter', sans-serif; }
+.form-page { max-width: 720px; margin: 0 auto; padding: 2rem; background: linear-gradient(135deg, #0A0C0F 0%, #0D1117 100%); min-height: 100vh; }
 
-.form-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+.form-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap; }
 .btn-back {
-    display: flex; align-items: center; gap: 6px;
-    color: #666; font-size: 13px; text-decoration: none;
-    transition: color 0.15s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    color: #94A3B8; font-size: 0.875rem; text-decoration: none;
+    transition: all 0.2s; padding: 0.5rem 1rem; border-radius: 10px;
+    background: rgba(13, 78, 89, 0.05); border: 1px solid rgba(35, 169, 189, 0.15);
 }
-.btn-back:hover { color: #999; }
-.form-title { font-size: 20px; font-weight: 500; color: #e8e6e0; letter-spacing: -0.3px; }
+.btn-back:hover { color: #23A9BD; border-color: rgba(35, 169, 189, 0.3); }
+.form-title { font-size: 1.5rem; font-weight: 600; background: linear-gradient(135deg, #23A9BD 0%, #0D4E59 100%); -webkit-background-clip: text; background-clip: text; color: transparent; letter-spacing: -0.5px; }
 
-.note-form { display: flex; flex-direction: column; gap: 16px; }
+.note-form { display: flex; flex-direction: column; gap: 1.25rem; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
-.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-.form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-label { font-size: 12.5px; font-weight: 500; color: #888; }
-.required { color: #E24B4A; }
+.form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+.form-label { font-size: 0.75rem; font-weight: 600; color: #94A3B8; text-transform: uppercase; letter-spacing: 0.5px; }
+.required { color: #DA8642; }
 .form-input {
-    height: 40px; padding: 0 12px;
-    background: #111; border: 1px solid #222; border-radius: 8px;
-    color: #e0e0e0; font-size: 14px; outline: none;
-    transition: border-color 0.15s; font-family: inherit; width: 100%;
+    height: 44px; padding: 0 1rem;
+    background: #0D1117; border: 1px solid rgba(35, 169, 189, 0.2); border-radius: 10px;
+    color: #e0e0e0; font-size: 0.875rem; outline: none; transition: all 0.2s;
+    width: 100%;
 }
-.form-input:focus { border-color: #2e2e2e; }
-.form-textarea { height: auto; padding: 12px; resize: vertical; line-height: 1.7; }
-.input-error { border-color: #E24B4A !important; }
-.form-error { font-size: 12px; color: #E24B4A; }
+.form-input:focus { border-color: #23A9BD; box-shadow: 0 0 0 2px rgba(35, 169, 189, 0.1); }
+.form-textarea { height: auto; padding: 1rem; resize: vertical; line-height: 1.6; }
+.input-error { border-color: #DA8642 !important; }
+.form-error { font-size: 0.688rem; color: #DA8642; }
 
-.tags-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+.color-group { display: flex; gap: 0.5rem; align-items: center; }
+.color-input { width: 48px; height: 44px; border: 1px solid rgba(35, 169, 189, 0.2); border-radius: 10px; background: #0D1117; cursor: pointer; }
+.color-text { flex: 1; }
+
+.tags-wrap { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .tag-check {
-    padding: 5px 12px; border-radius: 99px;
-    border: 1px solid #2a2a2a; color: #666;
-    font-size: 12px; cursor: pointer;
-    transition: all 0.15s;
+    padding: 0.375rem 1rem; border-radius: 99px;
+    border: 1px solid rgba(35, 169, 189, 0.25); color: #94A3B8;
+    font-size: 0.75rem; cursor: pointer; transition: all 0.2s;
 }
-.tag-check:hover { border-color: #378ADD; color: #378ADD; }
-.tag-check--active { border-color: #378ADD; color: #378ADD; background: rgba(55,138,221,0.1); }
+.tag-check:hover { border-color: #23A9BD; color: #23A9BD; }
+.tag-check--active { border-color: #23A9BD; color: #23A9BD; background: rgba(35, 169, 189, 0.1); }
 
-.toggles-row { display: flex; gap: 20px; flex-wrap: wrap; }
+.toggles-row { display: flex; gap: 1.5rem; flex-wrap: wrap; padding: 0.5rem 0; }
 .toggle-label {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 13px; color: #777; cursor: pointer;
+    display: flex; align-items: center; gap: 0.5rem;
+    font-size: 0.813rem; color: #94A3B8; cursor: pointer;
 }
-.toggle-label input { accent-color: #378ADD; }
+.toggle-label input { accent-color: #23A9BD; width: 18px; height: 18px; }
 
-.form-actions { display: flex; gap: 10px; justify-content: flex-end; padding-top: 8px; }
+.form-actions { display: flex; gap: 1rem; justify-content: flex-end; padding-top: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.05); margin-top: 0.5rem; }
 .btn-primary {
-    height: 40px; padding: 0 22px;
-    background: #378ADD; border: none; border-radius: 8px;
-    color: #fff; font-size: 13.5px; font-weight: 500;
-    cursor: pointer; transition: background 0.15s; font-family: inherit;
+    height: 44px; padding: 0 1.75rem;
+    background: #23A9BD; border: none; border-radius: 10px;
+    color: #fff; font-size: 0.875rem; font-weight: 600;
+    cursor: pointer; transition: all 0.2s;
 }
-.btn-primary:hover { background: #2e72c9; }
-.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-primary:hover { background: #1D8FA0; transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .btn-secondary {
-    height: 40px; padding: 0 22px;
-    background: none; border: 1px solid #2a2a2a; border-radius: 8px;
-    color: #888; font-size: 13.5px;
-    cursor: pointer; transition: all 0.15s; font-family: inherit;
+    height: 44px; padding: 0 1.75rem;
+    background: rgba(13, 78, 89, 0.05); border: 1px solid rgba(35, 169, 189, 0.25); border-radius: 10px;
+    color: #94A3B8; font-size: 0.875rem; font-weight: 500;
+    cursor: pointer; transition: all 0.2s;
 }
-.btn-secondary:hover { border-color: #444; color: #bbb; }
+.btn-secondary:hover { border-color: #23A9BD; color: #23A9BD; }
+
+@media (max-width: 640px) {
+    .form-page { padding: 1rem; }
+    .form-row { grid-template-columns: 1fr; gap: 1rem; }
+    .form-actions { flex-direction: column-reverse; }
+    .btn-primary, .btn-secondary { width: 100%; }
+}
 </style>

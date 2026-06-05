@@ -6,42 +6,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title', 'Noteku')</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary:    '#23A9BD',
+                        'primary-dk': '#1b8a9a',
+                        secondary:  '#0D4E59',
+                        tertiary:   '#DA8642',
+                        neutral:    '#94A3B8',
+                        bg:         '#07111a',
+                        'bg-2':     '#0c1c28',
+                        'bg-3':     '#112030',
+                        'bg-card':  '#0f1e2b',
+                        border:     '#163040',
+                        'border-2': '#1e3f53',
+                        tx:         '#e2eaf0',
+                        'tx-2':     '#6b8fa3',
+                        'tx-3':     '#3a5a6e',
+                    },
+                    fontFamily: {
+                        display: ['Hanken Grotesk', 'sans-serif'],
+                        body:    ['Inter', 'sans-serif'],
+                        label:   ['Geist', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
     @livewireStyles
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
         :root {
-            --bg:       #0d0d0d;
-            --bg-2:     #141414;
-            --bg-3:     #1c1c1c;
-            --bg-hover: #1f1f1f;
-            --border:   #232323;
-            --border-2: #2a2a2a;
-            --text:     #e8e6e0;
-            --text-2:   #888;
-            --text-3:   #444;
-            --accent:   #378ADD;
-            --red:      #E24B4A;
-            --navbar-h: 52px;
+            --primary:    #23A9BD;
+            --primary-dk: #1b8a9a;
+            --secondary:  #0D4E59;
+            --tertiary:   #DA8642;
+            --bg:         #07111a;
+            --bg-2:       #0c1c28;
+            --bg-3:       #112030;
+            --bg-card:    #0f1e2b;
+            --border:     #163040;
+            --border-2:   #1e3f53;
+            --text:       #e2eaf0;
+            --text-2:     #6b8fa3;
+            --text-3:     #3a5a6e;
+            --red:        #E24B4A;
+            --navbar-h:   56px;
         }
 
         body {
             background: var(--bg);
+            background-image: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(13,78,89,0.3) 0%, transparent 70%);
             color: var(--text);
-            font-family: 'Geist', sans-serif;
+            font-family: 'Inter', sans-serif;
             font-size: 14px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
         }
 
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 3px; }
+
         /* ══════════════════════════════════════
            NAVBAR
         ══════════════════════════════════════ */
         .navbar {
             height: var(--navbar-h);
-            background: var(--bg-2);
+            background: rgba(12, 28, 40, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid var(--border);
             display: flex;
             align-items: center;
@@ -56,26 +97,28 @@
         .navbar-logo {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 9px;
             text-decoration: none;
             flex-shrink: 0;
             margin-right: 8px;
         }
         .navbar-logo-icon {
-            width: 28px;
-            height: 28px;
-            background: #1e1e1e;
+            width: 32px;
+            height: 32px;
+            background: var(--bg-3);
             border: 1px solid var(--border-2);
-            border-radius: 8px;
+            border-radius: 9px;
             display: flex;
             align-items: center;
             justify-content: center;
+            box-shadow: 0 0 12px rgba(35,169,189,0.15);
         }
-        .navbar-logo-icon svg { width: 14px; height: 14px; stroke: #c8c5be; }
+        .navbar-logo-icon svg { width: 15px; height: 15px; stroke: var(--primary); }
         .navbar-logo-text {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text);
+            font-family: 'Hanken Grotesk', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
             letter-spacing: -0.3px;
         }
 
@@ -101,13 +144,14 @@
             border: none;
             background: none;
             cursor: pointer;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
         }
         .nav-link svg { width: 14px; height: 14px; flex-shrink: 0; }
-        .nav-link:hover { background: var(--bg-hover); color: var(--text); }
+        .nav-link:hover { background: var(--bg-3); color: var(--text); }
         .nav-link.active {
             background: var(--bg-3);
-            color: var(--text);
+            color: var(--primary);
+            border: 1px solid var(--border);
         }
         .nav-link.danger { color: var(--red); }
         .nav-link.danger:hover { background: rgba(226,75,74,0.08); color: var(--red); }
@@ -118,21 +162,22 @@
             align-items: center;
             gap: 6px;
             padding: 7px 14px;
-            background: var(--text);
-            color: #0d0d0d;
+            background: var(--primary);
+            color: #fff;
             border: none;
             border-radius: 8px;
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             text-decoration: none;
-            font-family: inherit;
-            transition: background 0.15s;
+            font-family: 'Inter', sans-serif;
+            transition: background 0.15s, box-shadow 0.15s;
             white-space: nowrap;
             flex-shrink: 0;
+            box-shadow: 0 0 16px rgba(35,169,189,0.25);
         }
         .btn-new-note svg { width: 14px; height: 14px; }
-        .btn-new-note:hover { background: #fff; }
+        .btn-new-note:hover { background: var(--primary-dk); box-shadow: 0 0 20px rgba(35,169,189,0.35); }
 
         /* Right side */
         .navbar-right {
@@ -143,7 +188,7 @@
             flex-shrink: 0;
         }
 
-        /* Bell */
+        /* Icon btn */
         .navbar-icon-btn {
             width: 34px;
             height: 34px;
@@ -164,9 +209,10 @@
             position: absolute;
             top: 7px; right: 7px;
             width: 6px; height: 6px;
-            background: var(--accent);
+            background: var(--primary);
             border-radius: 50%;
             border: 1.5px solid var(--bg-2);
+            box-shadow: 0 0 6px rgba(35,169,189,0.6);
         }
 
         /* User pill */
@@ -184,16 +230,17 @@
         }
         .user-pill:hover { border-color: var(--border-2); }
         .user-avatar {
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            background: #2a3d55;
+            background: var(--secondary);
+            border: 1px solid rgba(35,169,189,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 10px;
             font-weight: 600;
-            color: #7ab3e0;
+            color: var(--primary);
             flex-shrink: 0;
             overflow: hidden;
         }
@@ -203,7 +250,7 @@
         .user-role  { font-size: 10.5px; color: var(--text-3); line-height: 1.2; }
         .user-pill-caret svg { width: 12px; height: 12px; stroke: var(--text-3); }
 
-        /* Dropdown menu */
+        /* Dropdown */
         .user-dropdown-wrap { position: relative; }
         .user-dropdown {
             display: none;
@@ -215,10 +262,9 @@
             border: 1px solid var(--border-2);
             border-radius: 12px;
             padding: 6px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(35,169,189,0.05);
             z-index: 300;
         }
-        .user-dropdown-wrap:focus-within .user-dropdown,
         .user-dropdown-wrap.open .user-dropdown { display: block; }
         .dropdown-divider { height: 1px; background: var(--border); margin: 4px 0; }
         .dropdown-link {
@@ -236,7 +282,7 @@
             width: 100%;
             text-align: left;
             cursor: pointer;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
         }
         .dropdown-link svg { width: 14px; height: 14px; }
         .dropdown-link:hover { background: var(--bg-3); color: var(--text); }
@@ -244,11 +290,11 @@
         .dropdown-link.danger:hover { background: rgba(226,75,74,0.08); }
 
         /* ══════════════════════════════════════
-           SEARCH BAR (di bawah navbar)
+           SEARCH BAR
         ══════════════════════════════════════ */
         .searchbar-wrap {
-            background: var(--bg);
-            padding: 14px 24px 0;
+            background: transparent;
+            padding: 16px 24px 0;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -265,9 +311,12 @@
             height: 38px;
             flex: 1;
             max-width: 520px;
-            transition: border-color 0.15s;
+            transition: border-color 0.15s, box-shadow 0.15s;
         }
-        .searchbar:focus-within { border-color: var(--border-2); }
+        .searchbar:focus-within {
+            border-color: rgba(35,169,189,0.4);
+            box-shadow: 0 0 0 3px rgba(35,169,189,0.08);
+        }
         .searchbar svg { width: 14px; height: 14px; stroke: var(--text-3); flex-shrink: 0; }
         .searchbar input {
             background: none;
@@ -275,7 +324,7 @@
             outline: none;
             color: var(--text);
             font-size: 13.5px;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
             flex: 1;
         }
         .searchbar input::placeholder { color: var(--text-3); }
@@ -289,7 +338,7 @@
         }
 
         /* ══════════════════════════════════════
-           PAGE FOOTER
+           FOOTER
         ══════════════════════════════════════ */
         .page-footer {
             border-top: 1px solid var(--border);
@@ -299,21 +348,71 @@
             justify-content: space-between;
             font-size: 12px;
             color: var(--text-3);
+            background: var(--bg-2);
         }
-        .page-footer a { color: var(--text-3); text-decoration: none; }
+        .page-footer a { color: var(--text-3); text-decoration: none; transition: color 0.15s; }
         .page-footer a:hover { color: var(--text-2); }
         .page-footer-links { display: flex; gap: 16px; }
+
+        /* ══════════════════════════════════════
+           MOBILE RESPONSIVE
+        ══════════════════════════════════════ */
+        .mobile-menu-btn {
+            display: none;
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-2);
+        }
+        .mobile-menu-btn svg { width: 18px; height: 18px; }
+
+        .mobile-nav {
+            display: none;
+            flex-direction: column;
+            background: var(--bg-2);
+            border-bottom: 1px solid var(--border);
+            padding: 8px 12px 12px;
+            gap: 2px;
+        }
+        .mobile-nav.open { display: flex; }
+        .mobile-nav .nav-link { justify-content: flex-start; }
+
+        @media (max-width: 768px) {
+            .navbar-nav { display: none; }
+            .btn-new-note span { display: none; }
+            .btn-new-note { padding: 7px 10px; }
+            .user-info { display: none; }
+            .user-pill-caret { display: none; }
+            .mobile-menu-btn { display: flex; }
+            .searchbar-wrap { padding: 12px 16px 0; }
+            .main-content { padding: 16px 16px 32px; }
+            .page-footer { flex-direction: column; gap: 8px; text-align: center; }
+            .navbar { padding: 0 14px; }
+        }
     </style>
 </head>
 <body>
 
 {{-- ── NAVBAR ── --}}
 <nav class="navbar">
+    {{-- Mobile menu toggle --}}
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="3" y1="6" x2="21" y2="6"/>
+            <line x1="3" y1="12" x2="21" y2="12"/>
+            <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+    </button>
 
     {{-- Logo --}}
     <a href="{{ route('dashboard') }}" class="navbar-logo">
         <div class="navbar-logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                 <polyline points="14 2 14 8 20 8"/>
                 <line x1="16" y1="13" x2="8" y2="13"/>
@@ -323,7 +422,7 @@
         <span class="navbar-logo-text">Noteku</span>
     </a>
 
-    {{-- Nav links --}}
+    {{-- Desktop Nav links --}}
     <div class="navbar-nav">
         <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
@@ -343,22 +442,19 @@
         </a>
     </div>
 
-    {{-- New Note button --}}
+    {{-- New Note --}}
     <a href="{{ route('notes.create') }}" class="btn-new-note">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        New Note
+        <span>New Note</span>
     </a>
 
     {{-- Right --}}
     <div class="navbar-right">
-
-        {{-- Bell --}}
         <button class="navbar-icon-btn" aria-label="Notifikasi">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             <span class="notif-dot"></span>
         </button>
 
-        {{-- User pill + dropdown --}}
         @auth
         <div class="user-dropdown-wrap" id="userDropWrap">
             <button class="user-pill" onclick="toggleDrop()" aria-label="User menu">
@@ -401,6 +497,26 @@
     </div>
 </nav>
 
+{{-- ── MOBILE NAV ── --}}
+<div class="mobile-nav" id="mobileNav">
+    <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Home
+    </a>
+    <a href="{{ route('archive') }}" class="nav-link {{ request()->routeIs('archive') ? 'active' : '' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+        Archive
+    </a>
+    <a href="{{ route('trash') }}" class="nav-link {{ request()->routeIs('trash') ? 'active' : '' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+        Trash
+    </a>
+    <a href="{{ route('categories') }}" class="nav-link {{ request()->routeIs('categories') ? 'active' : '' }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        Categories
+    </a>
+</div>
+
 {{-- ── SEARCH BAR ── --}}
 <div class="searchbar-wrap">
     <div class="searchbar">
@@ -418,7 +534,7 @@
 
 {{-- ── FOOTER ── --}}
 <footer class="page-footer">
-    <span>© 2024 Noteku. Premium Workspace.</span>
+    <span>© 2024 Noteku. Designed for deep work.</span>
     <div class="page-footer-links">
         <a href="#">Privacy</a>
         <a href="#">Terms</a>
@@ -435,6 +551,9 @@ document.addEventListener('click', function(e) {
     const w = document.getElementById('userDropWrap');
     if (w && !w.contains(e.target)) w.classList.remove('open');
 });
+function toggleMobileMenu() {
+    document.getElementById('mobileNav').classList.toggle('open');
+}
 </script>
 
 @livewireScripts
